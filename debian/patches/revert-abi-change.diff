@@ -1,0 +1,31 @@
+Author: Pino Toscano <pino@debian.org>
+Description: Revert ABI change
+ The addition of the constness for the operator== is correct, however it breaks
+ the ABI without bumping the SONAME.
+ To avoid breaking the users of this library, revert this ABI change in Debian;
+ drop this patch once the library bumps SONAME on its own.
+Last-Update: 2020-08-01
+Forwarded: not-needed
+
+--- a/keduvocdocument/keduvoccontainer.cpp
++++ b/keduvocdocument/keduvoccontainer.cpp
+@@ -176,7 +176,7 @@ KEduVocContainer& KEduVocContainer::oper
+     return *this;
+ }
+ 
+-bool KEduVocContainer::operator==(const KEduVocContainer &other) const
++bool KEduVocContainer::operator==(const KEduVocContainer &other)
+ {
+     return  d->m_name == other.d->m_name &&
+             d->m_inPractice == other.d->m_inPractice
+--- a/keduvocdocument/keduvoccontainer.h
++++ b/keduvocdocument/keduvoccontainer.h
+@@ -112,7 +112,7 @@ public:
+     void setInPractice( bool inPractice );
+ 
+     /** equality operator */
+-    bool operator==(const KEduVocContainer &other) const;
++    bool operator==(const KEduVocContainer &other);
+ 
+     /**
+      * The type of this container. @see EnumContainerType
